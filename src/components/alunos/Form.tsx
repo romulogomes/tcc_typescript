@@ -48,7 +48,7 @@ export default class FormAlunos extends React.Component<FormAlunosProps, State> 
         this.dismissAlert = this.dismissAlert.bind(this);
     }
 
-    componentDidMount(){
+    componentDidMount(): void{
         OrientadorService.listaOrientadores()
             .then(res => {
                 const orientadores = res.data;
@@ -60,14 +60,14 @@ export default class FormAlunos extends React.Component<FormAlunosProps, State> 
           this.getInfosAluno();
     }
 
-    dismissAlert(alert){
+    dismissAlert(alert): void{
         if(alert === 'alerta')
             this.setState({ alerta : { ativo : false } })
         else
             this.setState({ sucesso:  { ativo : false } })
     }
 
-    getInfosAluno(){
+    getInfosAluno(): void{
         AlunoService.getInfosAluno(this.state.idAluno)
             .then(res => {
                 console.log(res.data);
@@ -76,17 +76,17 @@ export default class FormAlunos extends React.Component<FormAlunosProps, State> 
             }).catch(erro => { console.log(erro)})
     }
 
-    transformOptions( advisors ) {
+    transformOptions(advisors) : void{
         const options = advisors.map(advisor => ({ value: advisor.id, label: advisor.name }))
         this.setState({options});   
     }
 
-    selecionaOrientador(option){
+    selecionaOrientador(option): void{
         debugger
         this.setState({orientadorSelecionado: option});
     }
 
-    salvarAluno(dadosForm : any) {
+    salvarAluno(dadosForm : any) : void{
         const dados : AlunoFormModel = dadosForm;
         
         if(!dados.name || !dados.advisor){
