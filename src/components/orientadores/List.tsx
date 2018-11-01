@@ -17,13 +17,13 @@ export interface Orientador {
   area : string;
 }
 
-export default class ListOrientadores extends React.Component<ListOrientadoresProps, any> {
+export default class ListOrientadores extends React.Component<ListOrientadoresProps, State> {
   constructor(props : ListOrientadoresProps){
     super(props);
 
     this.state = {
       orientadores : [],
-      orientadorSelecionado : {},
+      orientadorSelecionado : { id : 0, name : "", area : ""},
     }
     
     this.setOrientadorSelecionado = this.setOrientadorSelecionado.bind(this);
@@ -45,11 +45,10 @@ export default class ListOrientadores extends React.Component<ListOrientadoresPr
   }
 
   setOrientadorSelecionado(orientador : any) : void{
-    this.setState({orientadorSelecionado : orientador === this.state.orientadorSelecionado ? 0 : orientador });    
+    this.setState({orientadorSelecionado : orientador === this.state.orientadorSelecionado ? { id : 0} : orientador });    
   }
 
   removeOrientador() : void{
-    
     if (window.confirm("Confirma deletar Orientador?")) {
       OrientadorService.removeOrientador(this.state.orientadorSelecionado.id)
           .then(res => {
@@ -69,10 +68,11 @@ export default class ListOrientadores extends React.Component<ListOrientadoresPr
   public render() {
     const { orientadores } = this.state;
     return (
-      <div>
+      <div className="fadeIn">
         <Titulo texto="Orientadores"/>
         
         <Table dados={orientadores} selecionado={this.state.orientadorSelecionado} setSelecionado={this.setOrientadorSelecionado}/>             
+        
         <div className="col-3 mt-3">        
             <Link to="/orientador/novo"> <button type="button" className="btn btn-primary">Novo</button> </Link>
             <button type="button" className="btn btn-info ml-1"  onClick={this.redirectEdit}>Alterar</button>

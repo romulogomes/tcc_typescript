@@ -9,7 +9,6 @@ class OrientadorService {
         return axios.get(this.url_orientadores);
     }
 
-
     // getInfosOrientador(idOrientador){
     //     return axios.get(this.url_orientadores+idOrientador);
     // }
