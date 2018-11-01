@@ -15,6 +15,7 @@ class App extends Component {
           <Header />
           <Route path="/aluno"            exact={true} component={ListAlunos} />
           <Route path="/aluno/novo"                    component={FormAlunos} />
+          <Route path="/aluno/edit/:id"                component={FormAlunos} />
 
           <Route path="/orientador"       exact={true} component={ListOrientadores} />
           <Route path="/orientador/novo"               component={FormOrientadores} />
