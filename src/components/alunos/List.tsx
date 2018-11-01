@@ -2,6 +2,8 @@ import * as React from 'react';
 import Titulo from '../Titulo';
 import { Link } from "react-router-dom";
 import { Orientador } from '../orientadores/List';
+import AlunoService from './Service'
+import Table from '../Table';
 
 interface ListAlunosProps {
 }
@@ -9,6 +11,7 @@ interface ListAlunosProps {
 interface State {
     alunos : Aluno[];
     alunoSelecionado : Aluno
+    dadosTabela : []
 }
 
 export interface Aluno {
@@ -17,15 +20,13 @@ export interface Aluno {
     orientador : Orientador
 }
 
-
-
-export default class ListAlunos extends React.Component<ListAlunosProps, any> {
+export default class ListAlunos extends React.Component<ListAlunosProps, State> {
     constructor(props : ListAlunosProps) {
         super(props);
         
         this.state = {
             alunos: [],
-            alunoSelecionado : {},
+            alunoSelecionado : { id: 0, name: "", orientador : {id: 0, name: "", area: ""}},
             dadosTabela : []
         }
 
@@ -35,49 +36,57 @@ export default class ListAlunos extends React.Component<ListAlunosProps, any> {
         this.transformDataToTable = this.transformDataToTable.bind(this);
     }
 
-
-    setAlunoSelecionado(aluno : Aluno){
-        this.setState({alunoSelecionado : aluno === this.state.alunoSelecionado ? 0 : aluno });    
+    componentDidMount(){
+        AlunoService.listaAlunos()
+            .then(res => {
+                const alunos = res.data;
+                this.setState({ alunos });
+                this.transformDataToTable(alunos);
+            }).catch(erro =>{
+                console.log(erro)
+            })
     }
 
-    redirectEditAluno(){
+    setAlunoSelecionado(aluno : Aluno) : void{
+        this.setState({alunoSelecionado : aluno === this.state.alunoSelecionado ? { id: 0, name: "", orientador : {id: 0, name: "", area: ""}}  : aluno });    
+    }
+
+    redirectEditAluno() : void{
         window.location.href = `aluno/edit/${this.state.alunoSelecionado.id}`;
     }
-
-    removeAluno(){
+                 
+    removeAluno() : void{
         if (window.confirm("Confirma deletar Aluno?")) {
-            AlunosService.removeAluno(this.state.alunoSelecionado.id) 
+            AlunoService.removeAluno(this.state.alunoSelecionado.id) 
               .then(res => {
                 alert("Aluno Removido com sucesso");
-                const { dadosTabela }  = this.state;
-                const index = dadosTabela.indexOf(this.state.alunoSelecionado);
-                dadosTabela.splice(index, 1);
-                this.setState({dadosTabela});
+                this.componentDidMount();
             }).catch(erro =>{
                 console.log(erro)
             })
         }
     }
 
-    transformDataToTable( dados ) {
-        const json = [];
+    transformDataToTable( dados : Aluno[] ) : void {
+        const json : any = [];
         if(dados){ 
-            for (let i = 0; i < dados.length; i++) {
-                json.push({ "id" : dados[i].id,
-                            "name" : dados[i].name,
-                            "orientador" : dados[i].orientador.name,
-                            "area" : dados[i].orientador.area
+            dados.forEach( function (dado) {
+                json.push({ id : dado.id,
+                            name : dado.name,
+                            orientador : dado.orientador.name,
+                            area : dado.orientador.area
                 })
-            }
+            })
         }
         this.setState({ dadosTabela : json })
     }
   
     public render() {
         return (
-        <div>
-            List Alunos
+        <div className="fadeIn">
             <Titulo texto="Alunos"/>
+            
+            <Table dados={this.state.dadosTabela} selecionado={this.state.alunoSelecionado} setSelecionado={this.setAlunoSelecionado}/>
 
             <div className="col-3 mt-3">
                 <Link to="/aluno/novo"> <button type="button" className="btn btn-primary">Novo</button> </Link>
