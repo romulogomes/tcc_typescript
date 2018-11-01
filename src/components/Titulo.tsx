@@ -9,7 +9,7 @@ export default class Titulo extends React.Component<TituloProps, any> {
     return (
         <div className="col-2 mt-5">
             <h4>{this.props.texto}</h4>
-      </div>
+        </div>
     );
   }
 }
