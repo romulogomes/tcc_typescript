@@ -1,15 +1,14 @@
 import * as React from 'react';
 import { Field } from 'react-final-form'
 
+export interface OptionSelect{
+    value: any;
+    label: string;
+}
 export interface SelectProps {
     name: string;
     label: string;
     options : OptionSelect[]
-}
-
-export interface OptionSelect{
-    value: any;
-    label: string;
 }
 
 export default class Select extends React.Component<SelectProps, any> {
