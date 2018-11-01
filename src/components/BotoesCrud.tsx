@@ -3,7 +3,14 @@ import * as React from 'react';
 import BotaoSubmit from './BotaoSubmit'
 import BotaoVoltar from './BotaoVoltar'
 
-export default class BotoesCrud extends React.Component<any, any> {
+interface BotoesCrudProps{
+  labelCadastrar: string;
+  linkVoltar: string;
+  submitting: boolean;
+  pristine: boolean;
+}
+
+export default class BotoesCrud extends React.Component<BotoesCrudProps, any> {
   public render() {
     const { labelCadastrar, linkVoltar, submitting, pristine} = this.props;
     return (
