@@ -1,6 +1,11 @@
 import * as React from 'react';
 
-export default class BotaoSubmit extends React.Component<any, any> {
+interface BotaoSubmitProps{
+    labelCadastrar: string;
+    submitting: boolean;
+    pristine: boolean;
+}
+export default class BotaoSubmit extends React.Component<BotaoSubmitProps, any> {
   public render() {
     const { labelCadastrar, submitting, pristine} = this.props;
     return (
