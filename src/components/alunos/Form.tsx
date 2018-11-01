@@ -7,8 +7,15 @@ import OrientadorService from './../orientadores/Service'
 import Alerta from '../Alerta';
 import InputText from '../Input';
 import BotoesCrud from './../BotoesCrud'
+import { Aluno } from './List';
 
 export interface FormAlunosProps {
+}
+
+export interface AlunoForm{
+    id?: number;
+    name :string;
+    advisor: string | number;
 }
 
 export default class FormAlunos extends React.Component<FormAlunosProps, any> {
@@ -19,8 +26,8 @@ export default class FormAlunos extends React.Component<FormAlunosProps, any> {
             idAluno : props.match.params.id ? props.match.params.id : 0,
             name : '',
             orientador : '', 
-            success : { ativo : true, mensagem : ''},
-            warning : { ativo : true, mensagem : ''},
+            sucesso : { ativo : false, mensagem : ''},
+            alerta : { ativo : false, mensagem : ''},
             options : []
         }
 
@@ -42,10 +49,10 @@ export default class FormAlunos extends React.Component<FormAlunosProps, any> {
     }
 
     dismissAlert(alert){
-        if(alert === 'warning')
-            this.setState({ warning : { ativo : false } })
+        if(alert === 'alerta')
+            this.setState({ alerta : { ativo : false } })
         else
-            this.setState({ success:  { ativo : false } })
+            this.setState({ sucesso:  { ativo : false } })
     }
 
     getInfosAluno(){
@@ -66,10 +73,14 @@ export default class FormAlunos extends React.Component<FormAlunosProps, any> {
         this.setState({orientador: option});
     }
 
-    salvarAluno(dados : any) {
+    salvarAluno(dadosForm : any) {
+        const dados : AlunoForm = dadosForm as AlunoForm;
+        
+        debugger
+        
         if(!dados.name || !dados.advisor){
-            this.setState({ warning : { ativo : true, mensagem : 'Preencha todos os campos' }, success : { ativo : false }})
-            return false;
+            this.setState({ alerta : { ativo : true, mensagem : 'Preencha todos os campos' }, sucesso : { ativo : false }})
+            return;
         }
         
         const jsonSend : any = { name : dados.name, advisor_id : dados.advisor }
@@ -77,13 +88,13 @@ export default class FormAlunos extends React.Component<FormAlunosProps, any> {
             jsonSend.id = this.state.idAluno;
             AlunoService.editAluno(jsonSend)
                 .then(res => {
-                    this.setState( {success : { ativo : true, mensagem : "Editado com Sucesso"}, warning : { ativo : false} });
+                    this.setState( {sucesso : { ativo : true, mensagem : "Editado com Sucesso"}, alerta : { ativo : false} });
                 }).catch(erro => { console.log(erro); })    
         }
         else{        
             AlunoService.gravaAluno(jsonSend)
                 .then(res => {
-                    this.setState( {success : { ativo : true, mensagem : "Cadastrado com Sucesso"} , warning : { ativo : false} });
+                    this.setState( {sucesso : { ativo : true, mensagem : "Cadastrado com Sucesso"} , alerta : { ativo : false} });
                 }).catch(erro => { console.log(erro); })
         }
     }
@@ -103,8 +114,8 @@ export default class FormAlunos extends React.Component<FormAlunosProps, any> {
                         </form>
                     )}
                 />
-                <Alerta tipo="success" show={this.state.success.ativo} mensagem={this.state.success.mensagem} clickFechar={() => this.dismissAlert('sucess')} />
-                <Alerta tipo="warning" show={this.state.warning.ativo} mensagem={this.state.warning.mensagem} clickFechar={() => this.dismissAlert('warning')} />
+                <Alerta tipo="sucesso" show={this.state.sucesso.ativo} mensagem={this.state.sucesso.mensagem} clickFechar={() => this.dismissAlert('sucesso')} />
+                <Alerta tipo="alerta" show={this.state.alerta.ativo} mensagem={this.state.alerta.mensagem} clickFechar={() => this.dismissAlert('alerta')} />
             </div>
         );
     }
