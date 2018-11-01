@@ -5,9 +5,21 @@ import { Link } from 'react-router-dom'
 import Alerta from '../Alerta';
 import InputText from '../Input';
 import OrientadorService from './Service'
-import { Orientador } from './List';
 
 export interface FormOrientadoresProps {
+}
+
+interface State{
+    idOrientador: number;
+    name: string;
+    area: string;
+    sucesso : AlertaModel;
+    alerta : AlertaModel;
+}
+
+export interface AlertaModel{
+    ativo : boolean;
+    mensagem? : string;
 }
 
 export interface OrientadorForm {
@@ -16,7 +28,7 @@ export interface OrientadorForm {
     area: string;
 }
 
-export default class FormOrientadores extends React.Component<FormOrientadoresProps, any> {
+export default class FormOrientadores extends React.Component<FormOrientadoresProps, State> {
     constructor(props){
         super(props);
 
@@ -24,55 +36,71 @@ export default class FormOrientadores extends React.Component<FormOrientadoresPr
             idOrientador : props.match.params.id ? props.match.params.id : 0,
             name : '',
             area : '', 
-            success : { ativo : false, mensagem : ''},
-            warning : { ativo : false, mensagem : ''}
+            sucesso : { ativo : false, mensagem : ''},
+            alerta : { ativo : false, mensagem : ''}
         }
 
         this.salvarOrientador = this.salvarOrientador.bind(this); 
         this.dismissAlert = this.dismissAlert.bind(this);
     }
 
-    salvarOrientador(dadosForm: any) : void{
+    componentDidMount(): void{
+        if(this.state.idOrientador)
+          this.getInfosOrientador();
+    }
+
+    getInfosOrientador(): void{
+        OrientadorService.getInfosOrientador(this.state.idOrientador)
+        .then(res => {
+            const orientador = res.data;
+            this.setState({ name : orientador.name, area : orientador.area });
+        }).catch(erro => {
+            console.log(erro)
+        })
+    }
+
+    salvarOrientador(dadosForm: any): void{
         // Duvida 01
         const dados : OrientadorForm = dadosForm as OrientadorForm;
 
-        debugger
         if(!dados.name || !dados.area){
-            this.setState({ warning : { ativo : true, mensagem : 'Preencha todos os campos' }, success : { ativo : false }})
+            this.setState({ alerta : { ativo : true, mensagem : 'Preencha todos os campos' }, sucesso : { ativo : false }})
             return;
         }
         
         if(this.state.idOrientador){
+            //Duvida 02
             dados.id = this.state.idOrientador;
+
             OrientadorService.editaOrientador(dados)
                 .then(res => {
                     if(res.data.id)
-                        this.setState( {success : { ativo : true, mensagem : "Editado com Sucesso"}, warning : { ativo : false} });
+                        this.setState( {sucesso : { ativo : true, mensagem : "Editado com Sucesso"}, alerta : { ativo : false} });
                     else
-                        this.setState( { success : { ativo : false }, warning : { ativo : true, mensagem : "Não foi possível concluir sua Requisicao - Nome ja existe" } }); 
+                        this.setState( { sucesso : { ativo : false }, alerta : { ativo : true, mensagem : "Não foi possível concluir sua Requisicao - Nome ja existe" } }); 
                 }).catch(erro => { 
-                    this.setState( { success : { ativo : false }, 
-                                     warning : { ativo : true, mensagem : "Erro" } }); 
+                    this.setState( { sucesso : { ativo : false }, 
+                                     alerta : { ativo : true, mensagem : "Erro" } }); 
                 })    
         }
         else{        
             OrientadorService.gravaOrientador(dados)
                 .then(res => {
-                    this.setState( {success : { ativo : true, mensagem : "Cadastrado com Sucesso"} , warning : { ativo : false} });
+                    this.setState( {sucesso : { ativo : true, mensagem : "Cadastrado com Sucesso"} , alerta : { ativo : false} });
                     if(res.data.id)
-                        this.setState( {success : { ativo : true, mensagem : "salvo com Sucesso"}, warning : { ativo : false} });
+                        this.setState( {sucesso : { ativo : true, mensagem : "salvo com Sucesso"}, alerta : { ativo : false} });
                     else
-                        this.setState( { success : { ativo : false }, warning : { ativo : true, mensagem : "Não foi possível concluir sua Requisicao - Nome ja existe" } }); 
+                        this.setState( { sucesso : { ativo : false }, alerta : { ativo : true, mensagem : "Não foi possível concluir sua Requisicao - Nome ja existe" } }); 
                 }).catch(res => { 
                     const erros = res.response.data;
                     const mensagem = erros["name"] ? `Nome já existe - Server: ${erros["name"][0]}` : "Não foi possível concluir sua Requisicao";
-                    this.setState( { success : { ativo : false }, warning : { ativo : true, mensagem } }); 
+                    this.setState( { sucesso : { ativo : false }, alerta : { ativo : true, mensagem } }); 
                 })
         }
     }
 
-    dismissAlert(alert){
-        alert === 'warning' ?  this.setState({ warning : { ativo : false } }) :  this.setState({ success:  { ativo : false } })
+    dismissAlert(alert): void{
+        alert === 'alerta' ?  this.setState({ alerta : { ativo : false } }) :  this.setState({ sucesso:  { ativo : false } })
     }
 
     public render() {
@@ -96,8 +124,8 @@ export default class FormOrientadores extends React.Component<FormOrientadoresPr
                     )}
                 />
 
-                <Alerta tipo="success" show={this.state.success.ativo} mensagem={this.state.success.mensagem} clickFechar={() => this.dismissAlert('sucess')}/>
-                <Alerta tipo="warning" show={this.state.warning.ativo} mensagem={this.state.warning.mensagem} clickFechar={() => this.dismissAlert('warning')}/>
+                <Alerta tipo="sucesso" show={this.state.sucesso.ativo} mensagem={this.state.sucesso.mensagem} clickFechar={() => this.dismissAlert('sucesso')}/>
+                <Alerta tipo="alerta" show={this.state.alerta.ativo} mensagem={this.state.alerta.mensagem} clickFechar={() => this.dismissAlert('alerta')}/>
             </div>
         );
     }

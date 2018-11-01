@@ -4,12 +4,12 @@ import { API_URL } from '../../ApiUrl'
 class OrientadorService {
     url_orientadores = API_URL+'orientadores/';
 
-    listaOrientadores(): AxiosPromise{
-        return axios.get(this.url_orientadores);
-    }
-
     getInfosOrientador(idOrientador : number): AxiosPromise{
         return axios.get(this.url_orientadores+idOrientador);
+    }
+
+    listaOrientadores(): AxiosPromise{
+        return axios.get(this.url_orientadores);
     }
 
     gravaOrientador(data): AxiosPromise{

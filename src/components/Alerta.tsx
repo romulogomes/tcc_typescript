@@ -7,11 +7,12 @@ export interface AlertaProps {
     clickFechar() : void 
 }
 
+
 export default class Alerta extends React.Component<AlertaProps, any> {
   public render() {
     return (
         <div>
-            { this.props.show  && this.props.tipo === "success" &&
+            { this.props.show  && this.props.tipo === "sucesso" &&
                 <div className="alert alert-success mt-4 fadeIn" role="alert">
                     { this.props.mensagem ? this.props.mensagem : "Salvo com Sucesso"}
                     <button type="button" className="close" data-dismiss="alert" aria-label="Close" onClick={this.props.clickFechar}>
@@ -19,7 +20,7 @@ export default class Alerta extends React.Component<AlertaProps, any> {
                     </button>
                 </div> }
 
-            { this.props.show  && this.props.tipo === "warning" && 
+            { this.props.show  && this.props.tipo === "alerta" && 
                 <div className="alert alert-warning alert-dismissible fade show mt-4 fadeIn" role="alert">
                     <strong>Atenção!</strong> { this.props.mensagem ? this.props.mensagem : ""}
                         <button type="button" className="close" data-dismiss="alert" aria-label="Close" onClick={this.props.clickFechar} >
