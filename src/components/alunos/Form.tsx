@@ -1,31 +1,43 @@
 import * as React from 'react';
 import { Form } from 'react-final-form'
 
-import Select from '../Select';
+import Select, { OptionSelect } from '../Select';
 import AlunoService from './Service'
 import OrientadorService from './../orientadores/Service'
 import Alerta from '../Alerta';
 import InputText from '../Input';
 import BotoesCrud from './../BotoesCrud'
-import { Aluno } from './List';
+import { AlertaModel } from '../orientadores/Form';
+import { Orientador } from '../orientadores/List';
 
 export interface FormAlunosProps {
 }
 
-export interface AlunoForm{
+export interface AlunoFormModel{
     id?: number;
     name :string;
-    advisor: string | number;
+    advisor: string;
 }
 
-export default class FormAlunos extends React.Component<FormAlunosProps, any> {
+interface State {
+    idAluno: number;
+    name: string;
+    orientadores: Orientador[];
+    orientadorSelecionado: any;
+    sucesso: AlertaModel;
+    alerta: AlertaModel;
+    options: OptionSelect[]
+}
+
+export default class FormAlunos extends React.Component<FormAlunosProps, State> {
     constructor(props) {
         super(props);
         
         this.state = {
             idAluno : props.match.params.id ? props.match.params.id : 0,
             name : '',
-            orientador : '', 
+            orientadores: [],
+            orientadorSelecionado : '', 
             sucesso : { ativo : false, mensagem : ''},
             alerta : { ativo : false, mensagem : ''},
             options : []
@@ -39,9 +51,9 @@ export default class FormAlunos extends React.Component<FormAlunosProps, any> {
     componentDidMount(){
         OrientadorService.listaOrientadores()
             .then(res => {
-                const advisors = res.data;
-                this.setState({ advisors });
-                this.transformOptions(advisors);
+                const orientadores = res.data;
+                this.setState({ orientadores });
+                this.transformOptions(orientadores);
             }).catch(erro =>{ console.log(erro) })
 
         if(this.state.idAluno)
@@ -60,7 +72,7 @@ export default class FormAlunos extends React.Component<FormAlunosProps, any> {
             .then(res => {
                 console.log(res.data);
                 const aluno = res.data;
-                this.setState({ name : aluno.name , orientador : { value: aluno.orientador.id, label: aluno.orientador.name } });
+                this.setState({ name : aluno.name , orientadorSelecionado : { value: aluno.orientador.id, label: aluno.orientador.name } });
             }).catch(erro => { console.log(erro)})
     }
 
@@ -70,13 +82,12 @@ export default class FormAlunos extends React.Component<FormAlunosProps, any> {
     }
 
     selecionaOrientador(option){
-        this.setState({orientador: option});
+        debugger
+        this.setState({orientadorSelecionado: option});
     }
 
     salvarAluno(dadosForm : any) {
-        const dados : AlunoForm = dadosForm as AlunoForm;
-        
-        debugger
+        const dados : AlunoFormModel = dadosForm;
         
         if(!dados.name || !dados.advisor){
             this.setState({ alerta : { ativo : true, mensagem : 'Preencha todos os campos' }, sucesso : { ativo : false }})
@@ -103,7 +114,7 @@ export default class FormAlunos extends React.Component<FormAlunosProps, any> {
         return (
             <div className="fadeIn mt-4 p-4">
                 <Form onSubmit={this.salvarAluno}
-                      initialValues={{ name: this.state.name, advisor : this.state.orientador.value}}
+                      initialValues={{ name: this.state.name, advisor : this.state.orientadorSelecionado.value}}
                       render={({ handleSubmit, form, submitting, pristine}) => (
                         <form onSubmit={handleSubmit}>
                             <InputText label="Nome" name="name"/>
