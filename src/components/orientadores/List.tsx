@@ -44,8 +44,8 @@ export default class ListOrientadores extends React.Component<ListOrientadoresPr
     window.location.href = `orientador/edit/${this.state.orientadorSelecionado.id}`;
   }
 
-  setOrientadorSelecionado(orientador : any) : void{
-    this.setState({orientadorSelecionado : orientador === this.state.orientadorSelecionado ? { id : 0} : orientador });    
+  setOrientadorSelecionado(orientador : Orientador) : void{
+    this.setState({orientadorSelecionado : orientador === this.state.orientadorSelecionado ? { id: 0, name: "", area: ""} : orientador });    
   }
 
   removeOrientador() : void{

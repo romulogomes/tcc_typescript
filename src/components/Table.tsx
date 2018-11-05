@@ -6,8 +6,8 @@ export interface DadosTabela{
 
 export interface TableProps {
     dados : DadosTabela[];
-    selecionado : { id :number };
-    setSelecionado(selecionado : {id : number}) : void
+    selecionado : DadosTabela;
+    setSelecionado( selecionado : DadosTabela) : void
 }
 
 export default class Table extends React.Component<TableProps, any> {
