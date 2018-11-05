@@ -7,19 +7,19 @@ class AlunoService {
 
     url_alunos = API_URL+'students/';
 
-    listaAlunos() : AxiosPromise{
+    listaAlunos() : AxiosPromise<Aluno[]>{
         return axios.post(this.url_alunos+'dados_completos', {});
     }
     
-    getInfosAluno(idAluno : number): AxiosPromise{
+    getInfosAluno(idAluno : number): AxiosPromise<Aluno>{
         return axios.get(this.url_alunos + idAluno);
     }
     
-    gravaAluno(data: AlunoFormModel): AxiosPromise{
+    gravaAluno(data: AlunoFormModel): AxiosPromise<Aluno>{
         return axios.post( this.url_alunos, data);
     }
     
-    editAluno(data : AlunoFormModel): AxiosPromise{
+    editAluno(data : AlunoFormModel): AxiosPromise<Aluno>{
         return axios.put(this.url_alunos, data);
     }
     
