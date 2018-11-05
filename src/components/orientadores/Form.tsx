@@ -61,7 +61,8 @@ export default class FormOrientadores extends React.Component<FormOrientadoresPr
 
     salvarOrientador(dadosForm: any): void{
         // Duvida 01
-        const dados : OrientadorForm = dadosForm as OrientadorForm;
+        // debugger
+        const dados : OrientadorForm = dadosForm;
 
         if(!dados.name || !dados.area){
             this.setState({ alerta : { ativo : true, mensagem : 'Preencha todos os campos' }, sucesso : { ativo : false }})
@@ -99,7 +100,7 @@ export default class FormOrientadores extends React.Component<FormOrientadoresPr
         }
     }
 
-    dismissAlert(alert): void{
+    dismissAlert(alert: string): void{
         alert === 'alerta' ?  this.setState({ alerta : { ativo : false } }) :  this.setState({ sucesso:  { ativo : false } })
     }
 
