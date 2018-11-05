@@ -76,13 +76,12 @@ export default class FormAlunos extends React.Component<FormAlunosProps, State> 
             }).catch(erro => { console.log(erro)})
     }
 
-    transformOptions(advisors : Orientador[]) : void{
-        const options = advisors.map(advisor => ({ value: advisor.id, label: advisor.name }))
+    transformOptions(orientadores : Orientador[]) : void{
+        const options = orientadores.map(orientador => ({ value: orientador.id, label: orientador.name }))
         this.setState({options});   
     }
 
     selecionaOrientador(option: OptionSelect): void{
-        // debugger
         this.setState({orientadorSelecionado: option});
     }
 
