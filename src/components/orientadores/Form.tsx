@@ -62,15 +62,14 @@ export default class FormOrientadores extends React.Component<FormOrientadoresPr
     salvarOrientador(dadosForm: any): void{
         // Duvida 01
         // debugger
-        const dados : OrientadorForm = dadosForm;
-
+        const dados :OrientadorForm = dadosForm;
+        debugger
         if(!dados.name || !dados.area){
             this.setState({ alerta : { ativo : true, mensagem : 'Preencha todos os campos' }, sucesso : { ativo : false }})
             return;
         }
         
         if(this.state.idOrientador){
-            //Duvida 02
             dados.id = this.state.idOrientador;
 
             OrientadorService.editaOrientador(dados)
@@ -80,8 +79,7 @@ export default class FormOrientadores extends React.Component<FormOrientadoresPr
                     else
                         this.setState( { sucesso : { ativo : false }, alerta : { ativo : true, mensagem : "Não foi possível concluir sua Requisicao - Nome ja existe" } }); 
                 }).catch(erro => { 
-                    this.setState( { sucesso : { ativo : false }, 
-                                     alerta : { ativo : true, mensagem : "Erro" } }); 
+                    this.setState( { sucesso : { ativo : false }, alerta : { ativo : true, mensagem : "Erro" } }); 
                 })    
         }
         else{        
@@ -116,7 +114,6 @@ export default class FormOrientadores extends React.Component<FormOrientadoresPr
 
                             <InputText label="Area" name="area"/>
 
-                                                         
                             <div className="mt-3">
                                 <button type="submit" disabled={submitting || pristine} className="btn btn-primary">Cadastrar</button>
                                 <Link to='/orientador'> <button type="button" className="btn btn-light ml-2">Voltar</button> </Link>
