@@ -60,7 +60,7 @@ export default class FormAlunos extends React.Component<FormAlunosProps, State> 
           this.getInfosAluno();
     }
 
-    dismissAlert(alert): void{
+    dismissAlert(alert: string): void{
         if(alert === 'alerta')
             this.setState({ alerta : { ativo : false } })
         else
@@ -76,13 +76,13 @@ export default class FormAlunos extends React.Component<FormAlunosProps, State> 
             }).catch(erro => { console.log(erro)})
     }
 
-    transformOptions(advisors) : void{
+    transformOptions(advisors : Orientador[]) : void{
         const options = advisors.map(advisor => ({ value: advisor.id, label: advisor.name }))
         this.setState({options});   
     }
 
-    selecionaOrientador(option): void{
-        debugger
+    selecionaOrientador(option: OptionSelect): void{
+        // debugger
         this.setState({orientadorSelecionado: option});
     }
 
