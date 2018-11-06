@@ -9,6 +9,7 @@ import InputText from '../Input';
 import BotoesCrud from './../BotoesCrud'
 import { AlertaModel } from '../orientadores/Form';
 import { Orientador } from '../orientadores/List';
+import InputMoney from '../InputMoney';
 
 export interface FormAlunosProps {
 }
@@ -116,8 +117,10 @@ export default class FormAlunos extends React.Component<FormAlunosProps, State> 
                       initialValues={{ name: this.state.name, advisor : this.state.orientadorSelecionado.value}}
                       render={({ handleSubmit, form, submitting, pristine}) => (
                         <form onSubmit={handleSubmit}>
-                            <InputText label="Nome" name="name"/>
-                            
+                            <InputText label="Nome" name="name" tipo="text" />
+
+                            <InputMoney name="valor" placeholder="0,00" />
+                        
                             <Select label="Orientador" name="advisor" options={this.state.options} />
 
                             <BotoesCrud labelCadastrar="Cadastrar" linkVoltar="/aluno" submitting={submitting} pristine={pristine}/>
