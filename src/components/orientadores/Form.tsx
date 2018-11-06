@@ -110,9 +110,9 @@ export default class FormOrientadores extends React.Component<FormOrientadoresPr
                       render={({ handleSubmit, form, submitting, pristine}) => (
                         <form onSubmit={handleSubmit}>
                             
-                            <InputText label="Nome" name="name"/>
+                            <InputText label="Nome" name="name" tipo="text" />
 
-                            <InputText label="Area" name="area"/>
+                            <InputText label="Area" name="area" tipo="text" />
 
                             <div className="mt-3">
                                 <button type="submit" disabled={submitting || pristine} className="btn btn-primary">Cadastrar</button>
